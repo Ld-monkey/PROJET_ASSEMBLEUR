@@ -8,6 +8,7 @@ Projet cours: Réalisation d'un assembleur.
 
 import argparse
 import networkx as nx
+import matplotlib.pyplot as plt
 
 
 def arguments():
@@ -73,22 +74,46 @@ def get_starting_nodes(graph_network):
     Méthode qui prend en entrée un graphe et retourne une liste
     de noeuds d'entrée.
     """
-    return list(graph_network.nodes)
+    input_node_list = list()
+    for input_nodes in graph_network.nodes:
+        if len(list(graph_network.predecessors(input_nodes))) == 0:
+            input_node_list.append(input_nodes)
+    return input_node_list
 
 def get_sink_nodes(graph_network):
     """
     Méthode qui prend en entrée un graphe et retourne une liste
     de noeuds de sortie.
     """
-    print("get sink nodes")
+    output_node_list = list()
+    for output_nodes in graph_network.nodes:
+        if len(list(graph_network.successors(output_nodes))) == 0:
+            output_node_list.append(output_nodes)
+    return output_node_list
 
-def get_contigs(input_graph_network,
+def get_contigs(network_graph,
+                input_graph_network,
                 output_graph_network):
     """
-    prend un graphe, une liste de noeuds d’entrée et une liste de sortie et
-    retourne une liste de tuple(contig, taille du contig)
+    Méthode qui retourne une liste de tuple(contig, taille du contig)
     """
-    print("get contigs")
+    contigs = []
+    for noeud_depart in input_graph_network:
+        for noeud_fin in output_graph_network:
+            for path in nx.all_simple_paths(network_graph, source = noeud_depart, target = noeud_fin):
+                prep_contig = path
+                contig_ecrit = []
+                contig_ecrit.append(prep_contig[0])
+                for i in range(1, len(prep_contig)):
+                    contig_ecrit.append(prep_contig[i][-1:])
+                contig_ecrit = "".join(contig_ecrit)
+                contigs.append((contig_ecrit, len(contig_ecrit)))
+    return contigs
+
+
+def fill(text, width = 80):
+    """split text with a line return to respect fasta format"""
+    return os.linesep.join(text[i:i+width] for i in range(0, len(text), width))
 
 def save_contigs(graph_tuple, output_name):
     """
@@ -137,8 +162,23 @@ if __name__ == "__main__":
     # Construction du graph avec le dictionnaire.
     network = build_graph(KMER_DICT)
 
-    # Construction d'une liste de noeuds a partir d'un graph.
-    nodes = get_starting_nodes(network)
+    # Construction d'une liste de noeuds d'entrés a partir d'un graph.
+    all_input_nodes = get_starting_nodes(network)
+
+    # Construction d'une liste de noeuds de sortie a partir d'un graph.
+    all_output_nodes = get_sink_nodes(network)
 
     # Afficher tous les noeuds du grap.
-    print(nodes)
+    print(all_input_nodes)
+    print(all_output_nodes)
+
+    # Afficher le graph.
+    #nx.draw(network)
+    #plt.show()
+    all_contigs = list()
+    all_contigs = get_contigs(network,
+                              all_input_nodes,
+                              all_output_nodes)
+    print(all_contigs)
+
+
