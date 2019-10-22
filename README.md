@@ -3,5 +3,5 @@ Projet pour le Master II de bio-informatique : recréer un assembler.
 
 
 ```bash
-python debruijn.py -i ../data/eva71_two_reads.fq -k 21
+python debruijn/debruijn.py -i data/eva71_hundred_reads.fq -k 21 -o results/output.out
 ```
