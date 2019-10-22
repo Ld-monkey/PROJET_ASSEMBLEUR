@@ -1,0 +1,10 @@
+name: conda_assembleur
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+dependencies:
+  - python=3.7.4
+  - networkx
+  - pylint
+  - pytest
