@@ -8,8 +8,8 @@ Projet cours: Réalisation d'un assembleur.
 
 import argparse
 import networkx as nx
-import matplotlib.pyplot as plt
-
+import os
+import statistics
 
 def arguments():
     """ Méthode qui définie les arguments avec argparse."""
@@ -24,7 +24,6 @@ def arguments():
                         help="-o fichier config",
                         type=str)
     args = parser.parse_args()
-
     return args.i, args.k, args.o
 
 def cut_kmer(sequence, length_kmer):
@@ -120,13 +119,28 @@ def save_contigs(graph_tuple, output_name):
     qui prend un tuple (contig, taille du contig) et un nom de fichier de
     sortie et écrit un fichier de sortie contenant les contigs selon le format.
     """
+    numero = 0
     print("save contigs")
+    with open(output_name, "w") as output_file:
+        for contigs in graph_tuple:
+            output_file.write(">contig_{} len={}\n".format(numero,
+                                                            contigs[1]))
+            output_file.write("{}\n".format(fill(contigs[0])))
+            numero += 1
 
-def std():
-    pass
+def std(list_value):
+    """ Méthode qui retourne l'écart type. """
+    return statistics.stdev(list_value)
 
-def path_average_weight():
-    pass
+def path_average_weight(network_graph, path_list):
+    """
+    Méthode qui prend un graphe et un chemin et qui retourne un poids
+    moyen.
+    """
+    list_poids = list()
+    for u,v,e in network_graph.subgraph(path_list).edges(data=True):
+        list_poids.append(e['weight'])
+    return statistics.mean(list_poids)
 
 def remove_paths():
     pass
@@ -180,5 +194,7 @@ if __name__ == "__main__":
                               all_input_nodes,
                               all_output_nodes)
     print(all_contigs)
+    save_contigs(all_contigs, OUTPUT_FILE)
 
+    #path_average_weight(network, )
 
