@@ -1,2 +1,4 @@
 __py_cache__
 *.pyc
+.coverage
+src/.coverage
