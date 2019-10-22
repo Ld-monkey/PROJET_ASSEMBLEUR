@@ -35,7 +35,7 @@ def read_fastq(fastq_path):
     """ Méthode qui retourne une séquence du fastq."""
     with open(fastq_path, "r") as fastq_file:
         for line in fastq_file.readlines():
-            if line[0] == "A" or line[0] == "T" or line[0] == "G" or line[0] =="C":
+            if line[0] == "A" or line[0] == "T" or line[0] == "G" or line[0] == "C":
                 yield line.strip("\n")
 
 def build_kmer_dict(fastq_path, length_kmer):
@@ -49,7 +49,7 @@ def build_kmer_dict(fastq_path, length_kmer):
         for kmer in cut_kmer(seq, length_kmer):
             if kmer in k_mer_dict.keys():
                 k_mer_dict[kmer] += 1
-            else :
+            else:
                 k_mer_dict[kmer] = 0
     return k_mer_dict
 
@@ -61,9 +61,9 @@ def build_graph(dictionnary_kmer):
     print("build_graph")
     graph = nx.Graph()
     for key in dictionnary_kmer:
-        graph.add_edge(u_of_edge = key[:-1],
-                       v_of_edge = key[1:],
-                       weight = dictionnary_kmer[key])
+        graph.add_edge(u_of_edge=key[:-1],
+                       v_of_edge=key[1:],
+                       weight=dictionnary_kmer[key])
 
 # main
 if __name__ == "__main__":
@@ -76,7 +76,7 @@ if __name__ == "__main__":
     Retourne un dictionnaire du motif du k_mere avec son nombre d'occurence
     contenu dans des fastq.
     """
-    kmer_dict = build_kmer_dict(FASTQ_FILE, KMER_LENGTH)
+    KMER_DICT = build_kmer_dict(FASTQ_FILE, KMER_LENGTH)
 
     # Construction du graph avec le dictionnaire.
-    build_graph(kmer_dict)
+    build_graph(KMER_DICT)
