@@ -10,6 +10,7 @@ import argparse
 import networkx as nx
 import os
 import statistics
+import random
 
 def arguments():
     """ Méthode qui définie les arguments avec argparse."""
@@ -38,7 +39,7 @@ def read_fastq(fastq_path):
             if line[0] == "A" or line[0] == "T" or line[0] == "G" or line[0] == "C":
                 yield line.strip("\n")
 
-def build_kmer_dict(fastq_path, length_kmer):
+def build_kmer_dict(fastq_path, length_kmer = 21):
     """
     Méthode qui retourne un dictionnaire avec comme clès le k-mer et
     valeur le nombre d'occurence de ce k-mer.
@@ -142,23 +143,61 @@ def path_average_weight(network_graph, path_list):
         list_poids.append(e['weight'])
     return statistics.mean(list_poids)
 
-def remove_paths():
-    pass
+def remove_paths(network_graph, paths, delete_entry_node, delete_sink_node):
+    """
+    Qui prend un graphe et une liste de chemin, delete_entry_node pour
+    indiquer si les noeuds d’entrée seront supprimés et delete_sink_node
+    pour indiquer si es noeuds de sortie seront supprimés et retourne un
+    graphe nettoyé des chemins indésirables.
+    """
+    graph = network_graph
+    for i in range(len(paths)):
+        graph.remove_nodes_from(paths[i][1:-1])
+        if delete_entry_node == True:
+            graph.remove_node(paths[i][0])
+        if delete_sink_node == True:
+            graph.remove_node(paths[i][-1])
+    return graph
 
-def select_best_path():
+
+def select_best_path(network_graph, paths, delete_entry_node, delete_sink_node):
+    """
+    Qui prend un graphe et une liste de chemin, delete_entry_node pour
+    indiquer si les noeuds d’entrée seront supprimés et delete_sink_node
+    pour indiquer si les noeuds de sortie seront supprimés et retourne un
+    graphe nettoyé des chemins indésirables.
+    """
+    """
+    par 3 critères:
+    - Un chemin est plus fréquent
+    - Un chemin est plus long
+    - Le hasard, vous imposerez une seed à 9001
+    """
     pass
 
 def solve_bubble():
-    pass
+    """
+    Qui prend un graphe, un noeud ancêtre, un noeud descendant et
+    retourne un graph nettoyé de la bulle se trouvant entre ces
+    deux noeuds.
+    """
 
 def simplify_bubbles():
-    pass
+    """
+    Qui prend un graphe et retourne un graphe sans bulle
+    """
 
 def solve_entry_tips():
-    pass
+    """
+    Qui prend un graphe et une liste de noeuds d’entrée et retourne
+    graphe sans chemin d’entrée indésirable
+    """
 
 def solve_out_tips():
-    pass
+    """
+    Qui prend un graphe et une liste de noeuds de sortie et retourne graphe
+    sans chemin de sortie indésirable
+    """
 
 # main
 if __name__ == "__main__":
