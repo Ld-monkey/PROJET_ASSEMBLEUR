@@ -39,7 +39,7 @@ def read_fastq(fastq_path):
             if line[0] == "A" or line[0] == "T" or line[0] == "G" or line[0] == "C":
                 yield line.strip("\n")
 
-def build_kmer_dict(fastq_path, length_kmer = 21):
+def build_kmer_dict(fastq_path, length_kmer=21):
     """
     Méthode qui retourne un dictionnaire avec comme clès le k-mer et
     valeur le nombre d'occurence de ce k-mer.
@@ -100,7 +100,7 @@ def get_contigs(network_graph,
     contigs = []
     for noeud_depart in input_graph_network:
         for noeud_fin in output_graph_network:
-            for path in nx.all_simple_paths(network_graph, source = noeud_depart, target = noeud_fin):
+            for path in nx.all_simple_paths(network_graph, source=noeud_depart, target=noeud_fin):
                 prep_contig = path
                 contig_ecrit = []
                 contig_ecrit.append(prep_contig[0])
@@ -111,7 +111,7 @@ def get_contigs(network_graph,
     return contigs
 
 
-def fill(text, width = 80):
+def fill(text, width=80):
     """split text with a line return to respect fasta format"""
     return os.linesep.join(text[i:i+width] for i in range(0, len(text), width))
 
@@ -124,8 +124,7 @@ def save_contigs(graph_tuple, output_name):
     print("save contigs")
     with open(output_name, "w") as output_file:
         for contigs in graph_tuple:
-            output_file.write(">contig_{} len={}\n".format(numero,
-                                                            contigs[1]))
+            output_file.write(">contig_{} len={}\n".format(numero, contigs[1]))
             output_file.write("{}\n".format(fill(contigs[0])))
             numero += 1
 
